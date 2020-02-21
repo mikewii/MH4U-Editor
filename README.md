@@ -1,8 +1,8 @@
 # How to use
 Extract savefile from you 3ds \
 drag-n-drop it to MH4U_Tools \
-![4uopen]
 edit it, put it back to 3ds
+![4uopen]
 ![4uedit]
 ![4uequip]
 
