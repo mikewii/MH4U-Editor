@@ -1,0 +1,800 @@
+#include "MH4U/SaveHeader.hpp"
+#include "Tools/Blowfish.hpp"
+#include <wx/string.h>
+#include "types.h"
+#include "MH4U/Strings/Item_list.hpp"
+#include "MH4U/Strings/Armor_list.hpp"
+#include "MH4U/Strings/General_list.hpp"
+#include "MH4U/Strings/Weapon_list.hpp"
+#include "MH4U\Strings\Skills_list.hpp"
+#include "Tools/Buffer.hpp"
+#include "MH4U\Bitmap\BitmapAppend.hpp"
+
+
+namespace MH4U
+{
+    int Save::selectedEqID = int();
+	Save::sHeader* Save::saveHeader = new Save::sHeader;
+	
+    Save::Save (){
+
+    }; // END of Save::Save
+
+    Save::~Save () {
+
+    }; // END of Save::~Save
+	
+	
+	void		Save::Init(std::string& filepath, size_t encryption) {
+		
+		MH4U::ATK_CALC();
+		switch (encryption)
+		{
+		case(0): {
+			
+			TOOLS::Blowfish(TOOLS::Blowfish::Action::Decrypt,
+				filepath,
+				TOOLS::Buffer::vectorBuffer,
+				TOOLS::Blowfish::FileType::Save,
+				TOOLS::Blowfish::Output::No);
+			break;
+		}
+		case(1): {
+			
+			TOOLS::Blowfish(TOOLS::Blowfish::Action::Copy,
+				filepath,
+				TOOLS::Buffer::vectorBuffer,
+				TOOLS::Blowfish::FileType::Save,
+				TOOLS::Blowfish::Output::No);
+			
+			break;
+		};
+		}
+		
+		Save::saveHeader = reinterpret_cast<sHeader*>(&(TOOLS::Buffer::vectorBuffer.data()[0]));
+		int sie = sizeof(saveHeader->MainPalico);
+	}
+	
+	
+
+    const char*   Save::IDtoString (EquipmentType Type, u32 ID) {
+        const char* none = "(None)";
+        switch(Type) {
+            case(None): {
+                return none;
+                break;
+                }
+            case(Head): {
+                return MH4U::HEAD_LIST[ID];
+                break;
+                }
+            case(Chest): {
+                return MH4U::CHEST_LIST[ID];
+                break;
+            }
+            case(Arms): {
+                return MH4U::ARMS_LIST[ID];
+                break;
+            }
+            case(Waist): {
+                return MH4U::WAISTE_LIST[ID];
+                break; 
+            }
+            case(Legs): {
+                return MH4U::LEGS_LIST[ID];
+                break;
+            }
+            case(Talisman): {
+                return MH4U::TALISMAN_LIST[ID & 0xFF];
+                break;
+            }
+            case(GS): {
+                return MH4U::GS_LIST[ID];
+                break;
+            }
+            case(SNS): {
+                return MH4U::SNS_LIST[ID];
+                break;
+            }
+            case(Hammer): {
+                return MH4U::HAMMER_LIST[ID];
+                break;
+            }
+            case(Lance): {
+                return MH4U::LANCE_LIST[ID];
+                break;
+            }
+            case(LBG): {
+                return MH4U::LBG_LIST[ID];
+                break;
+            }
+            case(HBG): {
+                return MH4U::HBG_LIST[ID];
+                break;
+            }
+            case(LS): {
+                return MH4U::LS_LIST[ID];
+                break;
+            }
+            case(SA): {
+                return MH4U::SA_LIST[ID];
+                break;
+            }
+            case(GL): {
+                return MH4U::GL_LIST[ID];
+                break;
+            }
+            case(Bow): {
+                return MH4U::BOW_LIST[ID];
+                break;
+            }
+            case(DB): {
+                return MH4U::DB_LIST[ID];
+                break;
+            }
+            case(HH): {
+                return MH4U::HH_LIST[ID];
+                break;
+            }
+            case(IG): {
+                return MH4U::IG_LIST[ID];
+                break;
+            }
+            case(CB): {
+                return MH4U::CB_LIST[ID];
+                break;
+            }
+        }
+        return none;
+    } // END of Save::IDtoString
+
+    const wxArrayString&   Save::TypeTowxArrayString (EquipmentType Type) {
+
+        switch(Type) {
+            case(None): {
+                return MH4U::wxNONE;
+                break;
+                }
+            case(Head): {
+                return MH4U::wxHEAD_LIST;
+                break;
+                }
+            case(Chest): {
+                return MH4U::wxCHEST_LIST;
+                break;
+            }
+            case(Arms): {
+                return MH4U::wxARMS_LIST;
+                break;
+            }
+            case(Waist): {
+                return MH4U::wxWAISTE_LIST;
+                break; 
+            }
+            case(Legs): {
+                return MH4U::wxLEGS_LIST;
+                break;
+            }
+            case(Talisman): {
+                return MH4U::wxTALISMAN_LIST;
+                break;
+            }
+            case(GS): {
+                return MH4U::wxGS_LIST;
+                break;
+            }
+            case(SNS): {
+                return MH4U::wxSNS_LIST;
+                break;
+            }
+            case(Hammer): {
+                return MH4U::wxHAMMER_LIST;
+                break;
+            }
+            case(Lance): {
+                return MH4U::wxLANCE_LIST;
+                break;
+            }
+            case(LBG): {
+                return MH4U::wxLBG_LIST;
+                break;
+            }
+            case(HBG): {
+                return MH4U::wxHBG_LIST;
+                break;
+            }
+            case(LS): {
+                return MH4U::wxLS_LIST;
+                break;
+            }
+            case(SA): {
+                return MH4U::wxSA_LIST;
+                break;
+            }
+            case(GL): {
+                return MH4U::wxGL_LIST;
+                break;
+            }
+            case(Bow): {
+                return MH4U::wxBOW_LIST;
+                break;
+            }
+            case(DB): {
+                return MH4U::wxDB_LIST;
+                break;
+            }
+            case(HH): {
+                return MH4U::wxHH_LIST;
+                break;
+            }
+            case(IG): {
+                return MH4U::wxIG_LIST;
+                break;
+            }
+            case(CB): {
+                return MH4U::wxCB_LIST;
+                break;
+            }
+        }
+        return MH4U::wxNONE;
+    } // END of Save::TypeTowxArrayString
+
+    const wxString&        Save::TypetowxString(EquipmentType Type) {
+        return wxEQUIPMENT_NAMES[static_cast<int>(Type)];
+    } // END of Save::TypeTowxString
+
+    void    Save::FillGeneral1 (wxTextCtrl* wxPlName,
+                                wxChoice*   wxGender,
+                                wxChoice*   wxFace,
+                                wxChoice*   wxFaceFeature,
+                                wxChoice*   wxHair,
+                                wxChoice*   wxClothing,
+                                wxChoice*   wxVoice) {
+        /// Player Name
+        wxString pname((wchar_t*)saveHeader->PlayerName);
+        wxPlName->SetValue(pname);
+
+        int gender = saveHeader->Gender;
+        int face = saveHeader->Face;
+        int faceFeature = saveHeader->FaceFeature;
+        int hair = saveHeader->Hair;
+        int clothing = saveHeader->Clothing;
+        int voice = saveHeader->Voice;
+
+        wxGender->SetSelection(gender);
+        wxFace->SetSelection(face);
+        wxFaceFeature->SetSelection(faceFeature);
+        wxHair->SetSelection(hair);
+        wxClothing->SetSelection(clothing);
+        wxVoice->SetSelection(voice);
+
+
+    }; // END of Save::FillGeneral1
+
+    void    Save::FillGeneral2 (wxSpinCtrl* wxHR,
+                                wxSpinCtrl* wxHRPoints,
+                                wxSpinCtrl* wxCaravanPoints) {
+        /// HunterRank
+        wxHR->SetValue((int)saveHeader->HunterRank);
+
+        /// Hunter Rank Points
+        wxHRPoints->SetValue((int)saveHeader->HunterRankPoints);
+
+        /// Caravan points:
+        wxCaravanPoints->SetValue((int)saveHeader->CaravanPoints);
+    }; // END of Save::FillGeneral2
+
+    void    Save::FillGeneral3 (wxSpinCtrl* wxZenny,
+                                wxSpinCtrl* wxPlaytime) {
+        /// Zenny
+        wxZenny->SetValue((int)saveHeader->Zenny);
+
+        /// Playtime
+        wxPlaytime->SetValue((int)saveHeader->Playtime);
+
+    }; // END of Save::FillGeneral3
+
+    void     Save::FillColors(    wxColourPickerCtrl* wxFaceFeatureColor,
+                            wxColourPickerCtrl* wxHairColor,
+                            wxColourPickerCtrl* wxClothingColor,
+                            wxColourPickerCtrl* wxSkinTone) {
+
+        /// Face Feature Color
+        wxFaceFeatureColor->SetColour(Save::RGBtowxRGB(saveHeader->FaceFeatureColor));
+
+        /// Hair Color
+        wxHairColor->SetColour(Save::RGBtowxRGB(saveHeader->HairColor));
+
+        /// Clothing Color
+        wxClothingColor->SetColour(Save::RGBtowxRGB(saveHeader->ClothingColor));
+
+        /// Skin Tone
+        wxSkinTone->SetColour(Save::RGBtowxRGB(saveHeader->SkinTone));
+
+
+    }; // END of Save::FillColors
+
+    void    Save::FillItemBox(wxDataViewListCtrl* wxItemBox) {
+        for (int i = 0; i < ITEM_S; i++) {
+            wxVector<wxVariant> item;
+
+            /// Position:
+            item.push_back(std::to_string(i+1));
+
+            /// Name:
+            item.push_back(MH4U::ITEMS[saveHeader->BoxItems[i].ID]);
+
+            /// Ammount:
+            item.push_back(std::to_string(saveHeader->BoxItems[i].Ammount));
+
+            /// Real ID:
+            item.push_back(std::to_string(saveHeader->BoxItems[i].ID));
+
+            wxItemBox->AppendItem( item );
+        }
+    } // END of Save::FillItemBox
+
+    void    Save::FillItemComboBox(wxComboBox* wxItemComboBox) {
+        if (wxItemComboBox->IsListEmpty()) {
+            wxItemComboBox->Set(MH4U::wxITEMS);
+        }
+        wxItemComboBox->AutoComplete(MH4U::wxITEMS);
+    } // End of Save::FillItemComboBox
+
+
+
+    ///
+    ///
+    /// Panel specific fillers:
+    void    Save::FillArmorPanel(
+                                            wxChoice*   wxDefence,
+                                            wxChoice*   wxResistance) {
+
+        // Armor specific:
+        if (wxDefence->IsEmpty()) {
+            wxDefence->Set(MH4U::wxARMOR_DEFENCE_LIST);
+            wxResistance->Set(MH4U::wxARMOR_RESISTANCE_LIST);
+        }
+    } // END of Save::FillArmorPanelComboBoxes
+
+    void     Save::FillWeaponPanel(
+        wxChoice*   wxHoning,
+        wxChoice*   wxStatusType,
+        wxChoice*   wxStatusN,
+        wxBitmapComboBox* wxSharpness) {
+
+        wxHoning->Set(MH4U::wxWEAPON_HONING);
+        wxStatusType->Set(MH4U::wxWEAPON_STATUS_TYPE);
+        BitmapAppend(wxSharpness);
+    }
+
+    void    Save::FillGSpanel(
+        wxChoice*   wxBonus,
+        wxChoice*   wxAtkLvl) {
+
+
+        wxBonus->Set(MH4U::wxATK_BONUS);
+        wxAtkLvl->Set(MH4U::wxGS_ATK);
+    }
+
+    void    Save::FillSnSpanel(
+        wxChoice*   wxBonus,
+        wxChoice*   wxAtkLvl) {
+
+
+        wxBonus->Set(MH4U::wxDEFENCE_BONUS);
+        wxAtkLvl->Set(MH4U::wxSNS_DB_ATK);
+    }
+
+    void    Save::FillDBpanel(
+        wxChoice*   wxBonus,
+        wxChoice*   wxAtkLvl) {
+
+
+        wxBonus->Set(MH4U::wxAFFINITY_BONUS);
+        wxAtkLvl->Set(MH4U::wxSNS_DB_ATK);
+    }
+
+    void    Save::FillHammerPanel(
+        wxChoice*   wxBonus,
+        wxChoice*   wxAtkLvl) {
+
+
+        wxBonus->Set(MH4U::wxAFFINITY_BONUS);
+        wxAtkLvl->Set(MH4U::wxH_HH_ATK);
+    }
+
+    void    Save::FillLancePanel(
+        wxChoice*   wxBonus,
+        wxChoice*   wxAtkLvl) {
+
+
+        wxBonus->Set(MH4U::wxDEFENCE_BONUS);
+        wxAtkLvl->Set(MH4U::wxL_GL_ATK);
+    }
+
+    void    Save::FillLSpanel(
+        wxChoice*   wxBonus,
+        wxChoice*   wxAtkLvl) {
+
+
+        wxBonus->Set(MH4U::wxAFFINITY_BONUS);
+        wxAtkLvl->Set(MH4U::wxLS_ATK);
+    }
+
+    void    Save::FillCBpanel(
+        wxChoice*   wxBonus,
+        wxChoice*   wxAtkLvl) {
+
+
+        wxBonus->Set(MH4U::wxCB_PHIALS);
+        wxAtkLvl->Set(MH4U::wxCB_ATK);
+    }
+
+    void    Save::FillSApanel(
+        wxChoice*   wxBonus,
+        wxChoice*   wxAtkLvl) {
+
+
+        wxBonus->Set(MH4U::wxSA_PHIALS);
+        wxAtkLvl->Set(MH4U::wxSA_ATK);
+    }
+
+    void    Save::FillGLpanel(
+        wxChoice*   wxBonus,
+        wxChoice*   wxAtkLvl) {
+
+
+        wxBonus->Set(MH4U::wxGL_SHOTS);
+        wxAtkLvl->Set(MH4U::wxL_GL_ATK);
+    }
+
+    void    Save::FillHHpanel(
+        wxBitmapComboBox*   wxBonus,
+        wxChoice*   wxAtkLvl) {
+
+        wxAtkLvl->Set(MH4U::wxH_HH_ATK);
+        HHBitmapAppend(wxBonus);
+    }
+
+    void     Save::FillIGpanel(
+        wxChoice*   wxRelicKinsect,
+        wxChoice*   wxAtkLvl,
+        wxChoice*   wxCraftedKinsect) {
+
+        wxRelicKinsect->Set(MH4U::wxIG_KINSECT_NAMES);
+        wxCraftedKinsect->Set(MH4U::wxIG_KINSECT_NAMES);
+        wxAtkLvl->Set(MH4U::wxIG_ATK);
+    }
+
+
+    void     Save::FillTalismanPanel(
+        wxComboBox* wxSkill1,
+        wxComboBox* wxSkill2) {
+
+        wxSkill1->Set(MH4U::wxSKILLS_LIST);
+        wxSkill2->Set(MH4U::wxSKILLS_LIST);
+        wxSkill1->AutoComplete(MH4U::wxSKILLS_LIST);
+        wxSkill2->AutoComplete(MH4U::wxSKILLS_LIST);
+
+    } // END of Save::FillTalismanPanel
+
+
+
+    ///
+    ///
+    ///
+    void    Save::FillSlotComboBoxes(
+        wxComboBox* wxSlot1,
+        wxComboBox* wxSlot2,
+        wxComboBox* wxSlot3) {
+
+        /// Decorations:
+        if (wxSlot1->IsListEmpty()) {
+            wxSlot1->Set(MH4U::wxJEWELS);
+            wxSlot2->Set(MH4U::wxJEWELS);
+            wxSlot3->Set(MH4U::wxJEWELS);
+        }
+        wxSlot1->AutoComplete(MH4U::wxJEWELS);
+        wxSlot2->AutoComplete(MH4U::wxJEWELS);
+        wxSlot3->AutoComplete(MH4U::wxJEWELS);
+    } // END of Save::FillSlotComboBoxes
+
+    void     Save::FillEqEditorTypeChoiceBox(wxChoice* wxTypeBox) {
+        if (wxTypeBox->IsEmpty()) {
+            wxTypeBox->Set(MH4U::wxEQUIPMENT_NAMES);
+        }
+    } // END of Save::FillEqEditorTypeChoiceBox
+
+    void     Save::SwitchEqEditorNameType(EquipmentType Type, wxComboBox* wxNameBox) {
+
+        wxNameBox->Set(TypeTowxArrayString(Type));
+        wxNameBox->AutoComplete(TypeTowxArrayString(Type));
+    }
+
+    void    Save::FillEqBox(wxDataViewListCtrl* wxEqBox) {
+        for (int i = 0; i < EQUIP_S; i++) {
+            wxVector<wxVariant> item = Save::MakeItem(i);
+            wxEqBox->AppendItem(item);
+        }
+    } // End of Save::FillEqBox
+
+    wxColour Save::RGBtowxRGB(uint8_t RGB[3]) {
+        wxColour colour(RGB[0], RGB[1], RGB[2]);
+        return colour;
+    }; // END of Save::RGBtowxRGB
+	
+	void	Save::wxColourToRGB(wxColour& colour, uint8_t RGB[3]) {
+		
+		RGB[0] = colour.Red();
+		RGB[1] = colour.Green();
+		RGB[2] = colour.Blue();
+	}
+	
+	
+
+    void    Save::ParserTypeToEqEditor(int ID, wxChoice* wxType) {
+
+        sHeader *buf = reinterpret_cast<sHeader*>(&(TOOLS::Buffer::vectorBuffer.data()[0]));
+        wxType->SetSelection(static_cast<int>(buf->BoxEquipment[ID].wxEquipment.Type));
+        
+    } // END of Save::ParserToEqEditor
+
+    void     Save::ParserNameToEqEditor(int ID, wxComboBox* wxName) {
+
+        sHeader *buf = reinterpret_cast<sHeader*>(&(TOOLS::Buffer::vectorBuffer.data()[0]));
+        wxName->SetSelection(static_cast<int>(buf->BoxEquipment[ID].wxEquipment.ID));
+
+    } // END of Save::ParserNameToEqEditor
+
+
+
+
+    void     Save::SetSelectedEqID(int id) {
+        selectedEqID = id;
+    };
+
+    int      Save::GetSelectedEqID() {
+        return selectedEqID;
+    };
+
+    wxVector<wxVariant>    Save::MakeItem(int i) {
+        wxVector<wxVariant> item;
+
+        sHeader *buf = reinterpret_cast<sHeader*>(&(TOOLS::Buffer::vectorBuffer.data()[0]));
+
+        /// Position:
+        item.push_back(std::to_string(i + 1));
+
+        /// Type name:
+        u8 type = buf->BoxEquipment[i].wxEquipment.Type;
+        item.push_back(MH4U::EQUIPMENT_NAMES[type]);
+
+        /// Name:
+        u32 id = buf->BoxEquipment[i].wxEquipment.ID;
+        item.push_back(IDtoString(static_cast<EquipmentType>(type), id));
+
+        /// Real ID:
+        item.push_back(std::to_string(id));
+
+        /// Real type ID
+        item.push_back(std::to_string(type));
+
+        return item;
+        
+    }
+
+    void     Save::SwitchStatusNType(int Type, EquipmentType EqType, wxChoice* wxStatusAmmount) {
+
+        switch (static_cast<StatusTypes>(Type)) {
+        case(none) : {
+            wxStatusAmmount->Set(MH4U::wxWPN_STATUS_NONE);
+            break;
+        }
+        case(Fire) :
+        case(Water) :
+        case(Thunder) :
+        case(Dragon) :
+        case(Ice) : {
+            switch (EqType) {
+            case(GS) : {
+                wxStatusAmmount->Set(MH4U::wxWEAPON_HIGH_ELEMENT);
+                break;
+            }
+            case(SNS) : {
+                wxStatusAmmount->Set(MH4U::wxWEAPON_LOW_ELEMENT);
+                break;
+            }
+            case(Hammer) : {
+                wxStatusAmmount->Set(MH4U::wxWEAPON_MEDIUM_ELEMENT);
+                break;
+            }
+            case(Lance) : {
+                wxStatusAmmount->Set(MH4U::wxWEAPON_MEDIUM_ELEMENT);
+                break;
+            }
+            case(LS) : {
+                wxStatusAmmount->Set(MH4U::wxWEAPON_MEDIUM_ELEMENT);
+                break;
+            }
+            case(SA) : {
+                wxStatusAmmount->Set(MH4U::wxWEAPON_MEDIUM_ELEMENT);
+                break;
+            }
+            case(GL) : {
+                wxStatusAmmount->Set(MH4U::wxWEAPON_MEDIUM_ELEMENT);
+                break;
+            }
+            case(Bow) : {
+                wxStatusAmmount->Set(MH4U::wxWEAPON_LOW_ELEMENT);
+                break;
+            }
+            case(DB) : {
+                wxStatusAmmount->Set(MH4U::wxWEAPON_LOW_ELEMENT);
+                break;
+            }
+            case(HH) : {
+                wxStatusAmmount->Set(MH4U::wxWEAPON_HIGH_ELEMENT);
+                break;
+            }
+            case(IG) : {
+                wxStatusAmmount->Set(MH4U::wxWEAPON_LOW_ELEMENT);
+                break;
+            }
+            case(CB) : {
+                wxStatusAmmount->Set(MH4U::wxWEAPON_MEDIUM_ELEMENT);
+                break;
+            }
+            }
+
+            break;
+        }
+        case(Poison) :
+        case(Paralysis) :
+        case(Sleep) :
+        case(Blast) : {
+            switch (EqType) {
+            case(GS) : {
+                wxStatusAmmount->Set(MH4U::wxWEAPON_HIGH_STATUS);
+                break;
+            }
+            case(SNS) : {
+                wxStatusAmmount->Set(MH4U::wxWEAPON_LOW_STATUS);
+                break;
+            }
+            case(Hammer) : {
+                wxStatusAmmount->Set(MH4U::wxWEAPON_MEDIUM_STATUS);
+                break;
+            }
+            case(Lance) : {
+                wxStatusAmmount->Set(MH4U::wxWEAPON_MEDIUM_STATUS);
+                break;
+            }
+            case(LS) : {
+                wxStatusAmmount->Set(MH4U::wxWEAPON_MEDIUM_STATUS);
+                break;
+            }
+            case(SA) : {
+                wxStatusAmmount->Set(MH4U::wxWEAPON_MEDIUM_STATUS);
+                break;
+            }
+            case(GL) : {
+                wxStatusAmmount->Set(MH4U::wxWEAPON_MEDIUM_STATUS);
+                break;
+            }
+            case(Bow) : {
+                wxStatusAmmount->Set(MH4U::wxWEAPON_LOW_STATUS);
+                break;
+            }
+            case(DB) : {
+                wxStatusAmmount->Set(MH4U::wxWEAPON_LOW_STATUS);
+                break;
+            }
+            case(HH) : {
+                wxStatusAmmount->Set(MH4U::wxWEAPON_HIGH_STATUS);
+                break;
+            }
+            case(IG) : {
+                wxStatusAmmount->Set(MH4U::wxWEAPON_LOW_STATUS);
+                break;
+            }
+            case(CB) : {
+                wxStatusAmmount->Set(MH4U::wxWEAPON_MEDIUM_STATUS);
+                break;
+            }
+            }
+
+            break;
+        }
+        }
+    }
+	
+	
+	void		Save::WriteGeneral(
+		wxTextCtrl*	wxPlayerName,
+		wxChoice*	wxGender,
+		wxChoice*	wxFace,
+		wxChoice*	wxFaceFeature,
+		wxChoice*	wxHair,
+		wxChoice*	wxClothing,
+		wxChoice*	wxVoice,
+		wxChoice*	wxEyeColor,
+		wxColourPickerCtrl*	wxFaceFeatureColour,
+		wxColourPickerCtrl*	wxHairColour,
+		wxColourPickerCtrl*	wxClothingColour,
+		wxColourPickerCtrl*	wxSkinTone,
+		wxSpinCtrl*	wxZenny,
+		wxSpinCtrl*	wxCaravanPoints,
+		wxSpinCtrl*	wxHR,
+		wxSpinCtrl*	wxHRpoints,
+		wxSpinCtrl*	wxPlaytime) {
+			
+			
+			
+			wxString playerName = wxPlayerName->GetValue();
+			size_t gender = wxGender->GetSelection();
+			size_t face = wxFace->GetSelection();
+			size_t faceFeature = wxFaceFeature->GetSelection();
+			size_t hair = wxHair->GetSelection();
+			size_t clothing = wxClothing->GetSelection();
+			size_t voice = wxVoice->GetSelection();
+			size_t eyeColor = wxEyeColor->GetSelection();
+			wxColour faceFeatureColor = wxFaceFeatureColour->GetColour();
+			wxColour hairColor = wxHairColour->GetColour();
+			wxColour clothingColor = wxClothingColour->GetColour();
+			wxColour skinTone = wxSkinTone->GetColour();
+			size_t zenny = wxZenny->GetValue();
+			size_t caravanPoints = wxCaravanPoints->GetValue();
+			size_t HR = wxHR->GetValue();
+			size_t HRpoints = wxHRpoints->GetValue();
+			//int playtime = wxPlaytime->GetValue();
+			
+			for(size_t i = 0 ; i < playerName.size() ; i++) {
+				saveHeader->PlayerName[i] = playerName.t_str()[i];
+			}
+			
+			uint8_t _faceFeutureColor[3];
+			uint8_t _hairColor[3];
+			uint8_t _clothingColor[3];
+			uint8_t _skinTone[3];
+			
+			Save::wxColourToRGB(faceFeatureColor, _faceFeutureColor);
+			Save::wxColourToRGB(hairColor, _hairColor);
+			Save::wxColourToRGB(clothingColor, _clothingColor);
+			Save::wxColourToRGB(skinTone, _skinTone);
+			
+			for (size_t i = 0; i < 3; i++) {
+				
+				saveHeader->FaceFeatureColor[i] = _faceFeutureColor[i];
+				saveHeader->HairColor[i] = _hairColor[i];
+				saveHeader->ClothingColor[i] = _clothingColor[i];
+				saveHeader->SkinTone[i] = _skinTone[i];
+			}
+			
+			
+			saveHeader->Gender = gender;
+			saveHeader->Face = face;
+			saveHeader->FaceFeature = faceFeature;
+			saveHeader->Hair = hair;
+			saveHeader->Clothing = clothing;
+			saveHeader->Voice = voice;
+			saveHeader->EyeColor = eyeColor;
+			
+			
+			
+			
+			
+			
+			saveHeader->Zenny = zenny;
+			saveHeader->CaravanPoints = caravanPoints;
+			saveHeader->HunterRank = HR;
+			saveHeader->HunterRankPoints = HRpoints;
+			//saveHeader->Playtime = playtime;
+			
+			
+	}
+
+
+
+
+}

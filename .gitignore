@@ -1,0 +1,14 @@
+# ignore all
+*
+*/
+
+# except
+!.gitignore
+!Sources
+!Sources/**
+!Includes
+!Includes/**
+!test
+!test/**
+!DebugMGW32.mak
+!Form.fbp
