@@ -8,7 +8,8 @@
 !Sources/**
 !Includes
 !Includes/**
-!test
-!test/**
+!Img
+!Img/**
 !DebugMGW32.mak
 !Form.fbp
+!README.md
